@@ -6,4 +6,6 @@
     <string name="btn_translation_into_black_and_white_gamma">перевод в черно-белую гамму</string>
     <string name="rationale_write_storage">Для выбора файлов требуется разрешение записи на хранение</string>
     <string name="error">Ошибка</string>
+    <string name="popup_delete">Удалить</string>
+    <string name="popup_use">Использовать</string>
 </resources>

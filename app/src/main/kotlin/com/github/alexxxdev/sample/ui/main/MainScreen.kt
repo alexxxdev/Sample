@@ -22,6 +22,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.alexxxdev.sample.data.ImageResult
 import java.io.File
+import android.view.Gravity
+import android.view.MenuItem
+import android.widget.PopupMenu
 
 
 class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.PermissionCallbacks {
@@ -68,6 +71,26 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         recyclerView.scrollToPosition(recyclerView.adapter.itemCount-1)
     }
 
+    override fun showSubMenu(parent: View) {
+        val popup = PopupMenu(this, parent, Gravity.RIGHT)
+        popup.menuInflater.inflate(R.menu.popup, popup.menu)
+
+        popup.setOnMenuItemClickListener { item ->
+            when(item.itemId){
+                R.id.action_delete -> presenter.onDeleteItem()
+                R.id.action_use -> presenter.onUseItem()
+            }
+
+            true
+        }
+
+        popup.show()
+    }
+
+    override fun deleteItem(pos: Int) {
+        (recyclerView.adapter as ImageAdapter).removeItem(pos)
+    }
+
     private fun initViews() {
         selectButton.setOnClickListener {
             openImageTask()
@@ -80,8 +103,8 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         recyclerView.layoutManager = LinearLayoutManager(this@MainScreen, LinearLayoutManager.VERTICAL, false)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.addItemDecoration(DividerItemDecoration(this@MainScreen, DividerItemDecoration.VERTICAL))
-        recyclerView.adapter = ImageAdapter{
-            presenter.onItemClick(it)
+        recyclerView.adapter = ImageAdapter{ v, pos, ir ->
+            presenter.onItemClick(v, pos, ir)
         }
     }
 
@@ -113,7 +136,7 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         } else {
             EasyImage.handleActivityResult(requestCode, resultCode, data, this, object : DefaultCallback() {
                 override fun onImagePickerError(e: Exception?, source: EasyImage.ImageSource?, type: Int) {
-                    Snackbar.make(imageView, e?.toString()?:getString(R.string.error), Snackbar.LENGTH_LONG)
+                    Snackbar.make(imageView, e?.toString()?:getString(R.string.error), Snackbar.LENGTH_LONG).show()
                 }
 
                 override fun onImagesPicked(imagesFiles: List<File>, source: EasyImage.ImageSource, type: Int) {

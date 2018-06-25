@@ -1,5 +1,7 @@
 package com.github.alexxxdev.sample.ui.main
 
+import android.view.MenuItem
+import android.view.View
 import com.arellomobile.mvp.InjectViewState
 import com.github.alexxxdev.sample.data.ImageResult
 import com.github.alexxxdev.sample.ui.base.BasePresenter
@@ -7,9 +9,9 @@ import java.io.File
 import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter @Inject constructor(): BasePresenter<MainView>() {
-
-    private lateinit var file: File
+class MainPresenter @Inject constructor(
+        private val interactor: MainInteractor
+) : BasePresenter<MainView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -18,25 +20,44 @@ class MainPresenter @Inject constructor(): BasePresenter<MainView>() {
 
     fun onImagesPicked(imagesFiles: List<File>) {
         if(imagesFiles.isNotEmpty()) {
-            file = imagesFiles[0]
-            viewState.showImage(file)
+            interactor.setImage(imagesFiles[0])
+            viewState.showImage(imagesFiles[0])
         }
     }
 
     fun onRotateImage() {
-        viewState.add(ImageResult(ImageResult.Type.ROTATE, file))
+        interactor.processing(ImageResult.Type.ROTATE){
+            viewState.add(it)
+        }
     }
 
     fun onTranslationGammaImage() {
-        viewState.add(ImageResult(ImageResult.Type.GAMMA, file))
+        interactor.processing(ImageResult.Type.GAMMA){
+            viewState.add(it)
+        }
     }
 
     fun onMirrorReflectionImage() {
-        viewState.add(ImageResult(ImageResult.Type.MIRROR, file))
+        interactor.processing(ImageResult.Type.MIRROR){
+            viewState.add(it)
+        }
     }
 
-    fun onItemClick(it: ImageResult) {
+    fun onItemClick(view:View, pos:Int, imageResult: ImageResult) {
+        viewState.showSubMenu(view)
+        interactor.setCurrentAction(pos, imageResult)
+    }
 
+    fun onDeleteItem() {
+        viewState.deleteItem(interactor.getCurrentActionPos())
+        interactor.deleteCurrentItem()
+    }
+
+    fun onUseItem() {
+        interactor.getCurrentActionImageResult()?.let {
+            interactor.setImage(it.file)
+            viewState.showImage(it.file)
+        }
     }
 
 }
