@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Sample</string>
-    <string name="select_image">Выбрать изображение</string>
+    <string name="btn_select_image">Выбрать изображение</string>
+    <string name="btn_rotate">Поворот</string>
+    <string name="btn_mirror_reflection">Зеркальное отражение</string>
+    <string name="btn_translation_into_black_and_white_gamma">перевод в черно-белую гамму</string>
+    <string name="rationale_write_storage">Для выбора файлов требуется разрешение записи на хранение</string>
+    <string name="error">Ошибка</string>
 </resources>
