@@ -13,14 +13,14 @@ import pl.aprilapps.easyphotopicker.EasyImage
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.AppSettingsDialog
-import android.widget.Toast
-import android.R.string.no
-import android.R.string.yes
 import pl.aprilapps.easyphotopicker.DefaultCallback
-import android.R.attr.data
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.github.alexxxdev.sample.data.ImageResult
 import java.io.File
 
 
@@ -60,9 +60,28 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
                 .into(imageView)
     }
 
+    override fun add(imageResult: ImageResult) {
+        if((recyclerView.adapter as ImageAdapter).itemCount == 0) {
+            recyclerView.visibility = View.VISIBLE
+        }
+        (recyclerView.adapter as ImageAdapter).addItem(imageResult)
+        recyclerView.scrollToPosition(recyclerView.adapter.itemCount-1)
+    }
+
     private fun initViews() {
         selectButton.setOnClickListener {
             openImageTask()
+        }
+
+        rotateButton.setOnClickListener { presenter.onRotateImage() }
+        translationGammaButton.setOnClickListener { presenter.onTranslationGammaImage() }
+        mirrorReflectionButton.setOnClickListener { presenter.onMirrorReflectionImage() }
+
+        recyclerView.layoutManager = LinearLayoutManager(this@MainScreen, LinearLayoutManager.VERTICAL, false)
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.addItemDecoration(DividerItemDecoration(this@MainScreen, DividerItemDecoration.VERTICAL))
+        recyclerView.adapter = ImageAdapter{
+            presenter.onItemClick(it)
         }
     }
 
