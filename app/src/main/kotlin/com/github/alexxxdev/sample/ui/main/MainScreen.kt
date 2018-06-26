@@ -63,6 +63,13 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
                 .into(imageView)
     }
 
+    override fun useImage(file: File) {
+        Glide.with(this@MainScreen)
+                .load(file)
+                .apply(RequestOptions().centerCrop())
+                .into(imageView)
+    }
+
     override fun add(imageResult: ImageResult) {
         if((recyclerView.adapter as ImageAdapter).itemCount == 0) {
             recyclerView.visibility = View.VISIBLE
@@ -71,20 +78,22 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         recyclerView.scrollToPosition(recyclerView.adapter.itemCount-1)
     }
 
-    override fun showSubMenu(parent: View) {
-        val popup = PopupMenu(this, parent, Gravity.RIGHT)
-        popup.menuInflater.inflate(R.menu.popup, popup.menu)
+    override fun showSubMenu(pos: Int) {
+        recyclerView.post {
+            val popup = PopupMenu(this, recyclerView.getChildAt(pos), Gravity.RIGHT)
+            popup.menuInflater.inflate(R.menu.popup, popup.menu)
 
-        popup.setOnMenuItemClickListener { item ->
-            when(item.itemId){
-                R.id.action_delete -> presenter.onDeleteItem()
-                R.id.action_use -> presenter.onUseItem()
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_delete -> presenter.onDeleteItem()
+                    R.id.action_use -> presenter.onUseItem()
+                }
+
+                true
             }
 
-            true
+            popup.show()
         }
-
-        popup.show()
     }
 
     override fun deleteItem(pos: Int) {
@@ -103,8 +112,8 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         recyclerView.layoutManager = LinearLayoutManager(this@MainScreen, LinearLayoutManager.VERTICAL, false)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.addItemDecoration(DividerItemDecoration(this@MainScreen, DividerItemDecoration.VERTICAL))
-        recyclerView.adapter = ImageAdapter{ v, pos, ir ->
-            presenter.onItemClick(v, pos, ir)
+        recyclerView.adapter = ImageAdapter{ pos, ir ->
+            presenter.onItemClick(pos, ir)
         }
     }
 

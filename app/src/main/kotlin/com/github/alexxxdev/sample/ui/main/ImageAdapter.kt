@@ -12,7 +12,7 @@ import com.github.alexxxdev.sample.data.ImageResult
 import kotlinx.android.synthetic.main.item_list_image.view.*
 import kotlinx.android.synthetic.main.main_screen.*
 
-class ImageAdapter(val onClick: (View, Int, ImageResult) -> Unit) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+class ImageAdapter(val onClick: (Int, ImageResult) -> Unit) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
     private var data = ArrayList<ImageResult>()
 
@@ -38,11 +38,11 @@ class ImageAdapter(val onClick: (View, Int, ImageResult) -> Unit) : RecyclerView
         notifyItemRangeChanged(pos, data.size)
     }
 
-    class ViewHolder(itemView: View?, val onClick: (View, Int, ImageResult) -> Unit) : RecyclerView.ViewHolder(itemView){
+    class ViewHolder(itemView: View?, val onClick: (Int, ImageResult) -> Unit) : RecyclerView.ViewHolder(itemView){
         private lateinit var imageResult:ImageResult
 
         init {
-            itemView?.setOnClickListener { onClick(it, adapterPosition, imageResult) }
+            itemView?.setOnClickListener { onClick(adapterPosition, imageResult) }
         }
 
         fun bind(ir: ImageResult) {

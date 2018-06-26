@@ -43,8 +43,8 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun onItemClick(view:View, pos:Int, imageResult: ImageResult) {
-        viewState.showSubMenu(view)
+    fun onItemClick(pos:Int, imageResult: ImageResult) {
+        viewState.showSubMenu(pos)
         interactor.setCurrentAction(pos, imageResult)
     }
 
@@ -56,7 +56,7 @@ class MainPresenter @Inject constructor(
     fun onUseItem() {
         interactor.getCurrentActionImageResult()?.let {
             interactor.setImage(it.file)
-            viewState.showImage(it.file)
+            viewState.useImage(it.file)
         }
     }
 
