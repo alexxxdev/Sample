@@ -80,7 +80,7 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
 
     override fun showSubMenu(pos: Int) {
         recyclerView.post {
-            val popup = PopupMenu(this, recyclerView.getChildAt(pos), Gravity.RIGHT)
+            val popup = PopupMenu(this, recyclerView.findViewHolderForAdapterPosition(pos).itemView, Gravity.RIGHT)
             popup.menuInflater.inflate(R.menu.popup, popup.menu)
 
             popup.setOnMenuItemClickListener { item ->
