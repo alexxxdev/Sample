@@ -23,7 +23,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.github.alexxxdev.sample.data.ImageResult
 import java.io.File
 import android.view.Gravity
-import android.view.MenuItem
 import android.widget.PopupMenu
 
 
@@ -53,7 +52,7 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         recyclerView.visibility = View.GONE
     }
 
-    override fun showImage(file: File) {
+    override fun showImage(file: String) {
         selectButton.visibility = View.GONE
         mainGroup.visibility = View.VISIBLE
 
@@ -63,18 +62,19 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
                 .into(imageView)
     }
 
-    override fun useImage(file: File) {
+    override fun useImage(file: String) {
         Glide.with(this@MainScreen)
                 .load(file)
                 .apply(RequestOptions().centerCrop())
                 .into(imageView)
     }
 
-    override fun add(imageResult: ImageResult) {
+    override fun setListImageResult(imageResult: List<ImageResult>) {
         if((recyclerView.adapter as ImageAdapter).itemCount == 0) {
             recyclerView.visibility = View.VISIBLE
         }
-        (recyclerView.adapter as ImageAdapter).addItem(imageResult)
+
+        (recyclerView.adapter as ImageAdapter).setItems(imageResult)
         recyclerView.scrollToPosition(recyclerView.adapter.itemCount-1)
     }
 
@@ -96,9 +96,7 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         }
     }
 
-    override fun deleteItem(pos: Int) {
-        (recyclerView.adapter as ImageAdapter).removeItem(pos)
-    }
+    override fun deleteItem() = Unit
 
     private fun initViews() {
         selectButton.setOnClickListener {
@@ -113,7 +111,7 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.addItemDecoration(DividerItemDecoration(this@MainScreen, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = ImageAdapter{ pos, ir ->
-            presenter.onItemClick(pos, ir)
+            presenter.onItemClick(pos, ir.id)
         }
     }
 
