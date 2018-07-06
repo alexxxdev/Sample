@@ -103,6 +103,10 @@ class MainScreen : BaseScreen<MainPresenter>(), MainView, EasyPermissions.Permis
             openImageTask()
         }
 
+        imageView.setOnClickListener {
+            openImageTask()
+        }
+
         rotateButton.setOnClickListener { presenter.onRotateImage() }
         translationGammaButton.setOnClickListener { presenter.onTranslationGammaImage() }
         mirrorReflectionButton.setOnClickListener { presenter.onMirrorReflectionImage() }
