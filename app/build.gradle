@@ -55,4 +55,6 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
     implementation "android.arch.work:work-runtime:1.0.0-alpha04"
+
+    implementation "com.github.yandextaxitech:binaryprefs:1.0.0"
 }

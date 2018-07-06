@@ -47,7 +47,7 @@ class BitmapProcessingWorker:Worker() {
             }
 
             val fOut = FileOutputStream(applicationContext.filesDir.absolutePath + "/" + id)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
             fOut.flush()
             fOut.close()
             outputData = Data.Builder()

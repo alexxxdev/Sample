@@ -14,7 +14,15 @@ class MainPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.showInitView()
+        interactor.getHistory{ file, map ->
+            if(file.isEmpty()) {
+                viewState.showInitView()
+            } else {
+                viewState.showImage(file)
+                viewState.setListImageResult(map)
+            }
+        }
+
     }
 
     fun onImagesPicked(imagesFiles: List<File>) {
